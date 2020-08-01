@@ -12,6 +12,6 @@ RUN apk update && \
     pip install -r requirements.txt --no-cache-dir && \
     apk --purge del .build-deps
 
-ENV PYTHONPATH "${PYTHONPATH}:/app/}"
+ENV PYTHONPATH "${PYTHONPATH}:/app/"
 ENV FLASK_APP "/app/healthcheck.py"
 CMD ["/app/entrypoint.sh"]
