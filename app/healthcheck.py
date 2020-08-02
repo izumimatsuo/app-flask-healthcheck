@@ -9,11 +9,11 @@ def healthcheck():
         db.session.execute('SELECT 1')
     except:
         return jsonify({
-            'status': 'unhealthy'
+            'status': 'fail'
         }), 503
     else:
         return jsonify({
-            'status': 'healthy'
+            'status': 'pass'
         }), 200
 
 

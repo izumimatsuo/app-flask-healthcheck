@@ -42,7 +42,7 @@ Server: Werkzeug/1.0.1 Python/3.8.5
 Date: Sat, 01 Aug 2020 08:16:44 GMT
 
 {
-  "status": "healthy"
+  "status": "pass"
 }
 ```
 
@@ -58,7 +58,7 @@ Server: Werkzeug/1.0.1 Python/3.8.5
 Date: Sat, 01 Aug 2020 08:21:42 GMT
 
 {
-  "status": "unhealthy"
+  "status": "fail"
 }
 ```
 
