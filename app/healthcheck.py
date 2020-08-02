@@ -10,7 +10,7 @@ def healthcheck():
     except:
         return jsonify({
             'status': 'unhealthy'
-        }), 500
+        }), 503
     else:
         return jsonify({
             'status': 'healthy'
