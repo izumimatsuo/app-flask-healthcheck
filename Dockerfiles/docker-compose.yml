@@ -6,22 +6,14 @@ services:
     ports:
       - 5000:5000
     environment:
-      TZ: Asia/Tokyo
       FLASK_ENV: development
-      DATABASE_URI: 'postgresql://postgres:postgres@rdb:5432/development'
+      DATABASE_URI: 'postgresql+psycopg2://postgres:postgres@rdb:5432/development'
       HTTPS_PROXY: ${HTTPS_PROXY}
   rdb:
-    image: postgres:9
+    image: postgres:latest
     ports:
       - 5432:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: development
-      POSTGRES_INITDB_ARGS: --encoding=UTF-8
-    volumes:
-      - database:/var/lib/postgresql/data
-
-volumes:
-  database:
-    driver: local
