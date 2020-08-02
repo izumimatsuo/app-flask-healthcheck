@@ -6,7 +6,7 @@
 
 ## ビルド
 
-以下のスクリプト実行で ```healthcheck-api:latest``` をイメージ作成
+以下のスクリプト実行で ```healthcheck-api:latest``` のイメージ作成
 
 ```
 $ ./docker_build.sh
@@ -18,10 +18,16 @@ healthcheck-api         latest              0d63dca9079f        9 seconds ago   
 
 ## 動作確認
 
-以下のスクリプト実行で postgresql コンテナも起動して動作確認が可能
+以下のスクリプト実行で postgresql コンテナを利用した動作確認が可能
 
 ```
 $ ./docker_compose_up.sh
+
+$ docker-compose -f Dockerfiles/docker-compose.yml ps
+      Name                     Command              State           Ports
+----------------------------------------------------------------------------------
+dockerfiles_app_1   /app/entrypoint.sh              Up      0.0.0.0:5000->5000/tcp
+dockerfiles_rdb_1   docker-entrypoint.sh postgres   Up      0.0.0.0:5432->5432/tcp
 ```
 
 正常時のレスポンス
@@ -62,16 +68,63 @@ Date: Sat, 01 Aug 2020 08:21:42 GMT
 
 DATABASE_URI = '{dialect}+{driver}://{user}:{password}@{host}:{port}/{database}'
 
-- dialect: データベースミドル (例 'postgresql')
-- driver: 接続ドライバ (例 'psycopg2')
-- user: ユーザ名 (例 'postgres')
-- password: パスワード (例 'postgres')
-- host: ホスト名 (例 'rdb')
-- port: ポート番号 (例 '5432')
-- database: データベース名 (例 'development')
+- dialect: データベースミドル
+- driver: 接続ドライバ
+- user: ユーザ名
+- password: パスワード
+- host: ホスト名
+- port: ポート番号
+- database: データベース名
 
 接続ドライバは以下がコンテナに含まれる
 
 - psycopg2 (postgresql 用ドライバ)
 - PyMySQL (mysql 用ドライバ）
-- sqlite3 は標準サポート
+
+postgresql をチェック対象にする場合の ```docker-compose.yml``` の例
+
+```
+version: '3'
+
+services:
+  app:
+    image: healthcheck-api:latest
+    ports:
+      - 5000:5000
+    environment:
+      FLASK_ENV: development
+      DATABASE_URI: 'postgresql+psycopg2://postgres:postgres@rdb:5432/development'
+      HTTPS_PROXY: ${HTTPS_PROXY}
+  rdb:
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: development
+```
+
+mysql をチェック対象にする場合の ```docker-compose.yml``` の例
+
+```
+version: '3'
+
+services:
+  app:
+    image: healthcheck-api:latest
+    ports:
+      - 5000:5000
+    environment:
+      FLASK_ENV: development
+      DATABASE_URI: 'mysql+pymysql://root:mysql@rdb:3306/development'
+      HTTPS_PROXY: ${HTTPS_PROXY}
+  rdb:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: development
+    command: --default-authentication-plugin=mysql_native_password
+```
