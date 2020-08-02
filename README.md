@@ -2,7 +2,7 @@
 
 - Python Flask で実装した healthcheck アプリケーション
 - データベース含めた healthcheck が可能
-- docker コンテナにビルドして実行可能
+- ビルドする事で docker コンテナで実行可能
 
 ## ビルド
 
