@@ -1,5 +1,6 @@
 import os
 from flask import jsonify
+from werkzeug.exceptions import HTTPException
 from app import db, api
 
 
@@ -15,6 +16,20 @@ def healthcheck():
         return jsonify({
             'status': 'pass'
         }), 200
+
+
+@api.errorhandler(Exception)
+def handle_exception(error):
+    # handling HTTP errors
+    if isinstance(error, HTTPException):
+        return jsonify({
+            'status': 'warn'
+        }), error.code
+
+    # handling non-HTTP erros only
+    return jsonify({
+        'status': 'fail'
+    }), 500
 
 
 if __name__ == '__main__':
